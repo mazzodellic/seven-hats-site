@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>Seven Hats | Progressive House Live Set - Booking</title>
+    <meta name="description" content="Seven Hats é um projeto de música eletrônica que une produção musical autoral, criatividade e versatilidade em um live set dinâmico. Booking aberto para eventos.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-black: #000000;
+            --bg-panel: rgba(6, 15, 32, 0.85);
+            --neon-blue: #00a8ff;
+            --deep-blue: #0051ff;
+            --spotify-green: #1DB954;
+            --yt-red: #FF0000;
+            --text-white: #ffffff;
+            --text-gray: #9eb3c9;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-black);
+            color: var(--text-white);
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .page-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: var(--bg-black);
+            box-shadow: 0 0 90px rgba(0, 168, 255, 0.16);
+        }
+
+        /* 1. IMAGEM PRINCIPAL ORIGINAL INTEIRA */
+        .hero-section {
+            width: 100%;
+            position: relative;
+            background-color: var(--bg-black);
+        }
+
+        .hero-section img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .hero-fade {
+            width: 100%;
+            height: 50px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0), var(--bg-black));
+            margin-top: -50px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* 2. CONTAINER DE EXTENSÃO */
+        .extension-container {
+            padding: 10px 22px 60px;
+            background: radial-gradient(circle at 50% 15%, rgba(0, 81, 255, 0.16) 0%, rgba(0, 0, 0, 1) 80%);
+        }
+
+        .section-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 40px 0 28px;
+            text-align: center;
+        }
+
+        .section-divider .line {
+            height: 1px;
+            width: 80px;
+            background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            color: var(--text-white);
+            text-shadow: 0 0 15px rgba(0, 168, 255, 0.6);
+        }
+
+        .media-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 35px;
+            max-width: 760px;
+            margin: 0 auto;
+        }
+
+        /* ESTILO DOS PLAYERS INTERATIVOS */
+        .interactive-card {
+            background: var(--bg-panel);
+            border: 1px solid rgba(0, 168, 255, 0.28);
+            border-radius: 18px;
+            padding: 22px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.85), inset 0 0 25px rgba(0, 168, 255, 0.05);
+            backdrop-filter: blur(12px);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .interactive-card.playing-spotify {
+            border-color: var(--spotify-green);
+            box-shadow: 0 0 30px rgba(29, 185, 84, 0.25);
+        }
+
+        .interactive-card.playing-youtube {
+            border-color: var(--yt-red);
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.25);
+        }
+
+        .player-top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .brand-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+            font-size: 1.05rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .fa-spotify { color: var(--spotify-green); font-size: 1.6rem; }
+        .fa-youtube { color: var(--yt-red); font-size: 1.6rem; }
+
+        /* Equalizador Animado JS */
+        .eq-bars {
+            display: inline-flex;
+            align-items: flex-end;
+            gap: 3px;
+            height: 16px;
+            margin-left: 6px;
+            opacity: 0.25;
+            transition: opacity 0.3s ease;
+        }
+
+        .eq-bars.active {
+            opacity: 1;
+        }
+
+        .eq-bar {
+            width: 3px;
+            background: var(--neon-blue);
+            border-radius: 2px;
+            height: 4px;
+        }
+
+        .eq-bars.active .eq-bar:nth-child(1) { animation: eqAnim 0.6s infinite ease-in-out alternate; }
+        .eq-bars.active .eq-bar:nth-child(2) { animation: eqAnim 0.45s infinite ease-in-out alternate 0.15s; }
+        .eq-bars.active .eq-bar:nth-child(3) { animation: eqAnim 0.7s infinite ease-in-out alternate 0.3s; }
+        .eq-bars.active .eq-bar:nth-child(4) { animation: eqAnim 0.5s infinite ease-in-out alternate 0.1s; }
+
+        @keyframes eqAnim {
+            0% { height: 4px; }
+            100% { height: 16px; }
+        }
+
+        /* Controles Customizados em JS */
+        .js-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .ctrl-btn {
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            color: var(--text-white);
+            padding: 8px 14px;
+            border-radius: 50px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            transition: all 0.25s ease;
+            text-decoration: none;
+        }
+
+        .ctrl-btn:hover {
+            background: var(--neon-blue);
+            color: #000;
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 12px rgba(0, 168, 255, 0.5);
+        }
+
+        .ctrl-btn.spotify-accent:hover {
+            background: var(--spotify-green);
+            border-color: var(--spotify-green);
+            color: #000;
+            box-shadow: 0 0 14px rgba(29, 185, 84, 0.6);
+        }
+
+        .ctrl-btn.yt-accent:hover {
+            background: var(--yt-red);
+            border-color: var(--yt-red);
+            color: #fff;
+            box-shadow: 0 0 14px rgba(255, 0, 0, 0.6);
+        }
+
+        /* Container do Spotify IFrame API */
+        .spotify-embed-wrapper {
+            border-radius: 12px;
+            overflow: hidden;
+            transition: height 0.35s ease;
+            background: #121212;
+            min-height: 152px;
+        }
+
+        .spotify-status-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 12px;
+            font-size: 0.78rem;
+            color: var(--text-gray);
+            padding: 0 4px;
+        }
+
+        /* Player de Vídeo do YouTube Responsivo com Capa Anti-Erro 153 */
+        .yt-video-Responsive {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 */
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 168, 255, 0.25);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
+        }
+
+        .yt-video-Responsive iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+            z-index: 1;
+        }
+
+        /* Capa Interativa HD (Thumbnail Oficial + Play Button) */
+        .yt-cover-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 3;
+            background-image: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.75)), url('https://i.ytimg.com/vi/th4K7sXkoVI/maxresdefault.jpg'), url('https://i.ytimg.com/vi/th4K7sXkoVI/hqdefault.jpg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .yt-cover-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .yt-big-play-btn {
+            width: 78px;
+            height: 78px;
+            border-radius: 50%;
+            background: rgba(255, 0, 0, 0.9);
+            border: 2px solid #ffffff;
+            color: #ffffff;
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-left: 5px;
+            box-shadow: 0 0 35px rgba(255, 0, 0, 0.8), 0 0 15px rgba(0, 168, 255, 0.5);
+            transition: transform 0.3s ease, background 0.3s ease;
+            margin-bottom: 14px;
+        }
+
+        .yt-cover-overlay:hover .yt-big-play-btn {
+            transform: scale(1.12);
+            background: #ff1a1a;
+        }
+
+        .yt-cover-badge {
+            background: rgba(0, 0, 0, 0.75);
+            border: 1px solid rgba(0, 168, 255, 0.5);
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-white);
+            backdrop-filter: blur(6px);
+        }
+
+        /* Barra de Progresso Interativa do YouTube */
+        .yt-progress-container {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 4px;
+            margin-top: 14px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .yt-progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--neon-blue), var(--yt-red));
+            border-radius: 4px;
+            transition: width 0.2s linear;
+        }
+
+        /* Barra Inferior de Status do YouTube */
+        .yt-interactive-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 12px;
+            padding: 10px 14px;
+            background: rgba(0, 0, 0, 0.55);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            flex-wrap: wrap;
+        }
+
+        .yt-time-display {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--neon-blue);
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* 3. SEÇÃO DE BOOKING */
+        .booking-box {
+            max-width: 760px;
+            margin: 15px auto 0;
+            padding: 40px 25px;
+            border-radius: 18px;
+            background: linear-gradient(180deg, rgba(0, 60, 150, 0.18) 0%, rgba(0, 10, 25, 0.85) 100%);
+            border: 1px solid rgba(0, 168, 255, 0.4);
+            box-shadow: 0 0 40px rgba(0, 102, 255, 0.15);
+            text-align: center;
+        }
+
+        .booking-subtitle {
+            color: var(--neon-blue);
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .booking-heading {
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            text-shadow: 0 0 20px rgba(0, 168, 255, 0.5);
+        }
+
+        .booking-desc {
+            color: var(--text-gray);
+            font-size: 0.95rem;
+            margin-bottom: 30px;
+        }
+
+        .contact-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .contact-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            padding: 18px 20px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: var(--text-white);
+            font-weight: 700;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .contact-btn i {
+            font-size: 1.8rem;
+        }
+
+        .btn-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .btn-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.85;
+            font-weight: 600;
+        }
+
+        .btn-value {
+            font-size: 1rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-whatsapp {
+            background: linear-gradient(135deg, #0066ff 0%, #00a8ff 100%);
+            box-shadow: 0 6px 25px rgba(0, 168, 255, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-whatsapp:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 168, 255, 0.6);
+            filter: brightness(1.1);
+        }
+
+        .btn-email {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 168, 255, 0.35);
+        }
+
+        .btn-email:hover {
+            background: rgba(0, 168, 255, 0.15);
+            border-color: var(--neon-blue);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 168, 255, 0.25);
+        }
+
+        footer {
+            margin-top: 50px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: 0.75rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.4);
+            text-align: center;
+        }
+
+        footer span {
+            color: var(--neon-blue);
+            font-weight: 700;
+        }
+
+        @media (max-width: 650px) {
+            .contact-buttons {
+                grid-template-columns: 1fr;
+            }
+            .booking-heading {
+                font-size: 1.5rem;
+            }
+            .section-title {
+                font-size: 1.05rem;
+                letter-spacing: 3px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <main class="page-wrapper">
+        <!-- 1. IMAGEM PRINCIPAL COMPLETA E ORIGINAL -->
+        <section class="hero-section">
+            <img src="hero.jpg" alt="Seven Hats - Progressive House Live Set">
+            <div class="hero-fade"></div>
+        </section>
+
+        <!-- 2. EXTENSÃO INTERATIVA: PLAYERS + BOOKING -->
+        <div class="extension-container">
+
+            <div class="section-divider">
+                <span class="line"></span>
+                <h2 class="section-title">Ouça & Assista</h2>
+                <span class="line"></span>
+            </div>
+
+            <div class="media-grid">
+                
+                <!-- ==========================================
+                     PLAYER 1: SPOTIFY INTERATIVO (JS API)
+                     ========================================== -->
+                <div class="interactive-card" id="spotify-card">
+                    <div class="player-top-bar">
+                        <div class="brand-title">
+                            <i class="fa-brands fa-spotify"></i>
+                            <span>Seven Hats no Spotify</span>
+                            <div class="eq-bars" id="spotify-eq">
+                                <span class="eq-bar"></span>
+                                <span class="eq-bar"></span>
+                                <span class="eq-bar"></span>
+                                <span class="eq-bar"></span>
+                            </div>
+                        </div>
+
+                        <div class="js-controls">
+                            <button type="button" class="ctrl-btn spotify-accent" id="sp-play-toggle">
+                                <i class="fa-solid fa-play" id="sp-play-icon"></i>
+                                <span id="sp-play-text">Tocar Top Tracks</span>
+                            </button>
+                            <button type="button" class="ctrl-btn" id="sp-size-toggle" title="Alternar tamanho do player">
+                                <i class="fa-solid fa-compress"></i> Compactar
+                            </button>
+                            <a href="https://open.spotify.com/intl-pt/artist/75fo9Q3LFoAazMmikmwBjv" target="_blank" rel="noopener noreferrer" class="ctrl-btn">
+                                Seguir <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="spotify-embed-wrapper" id="spotify-wrapper">
+                        <div id="spotify-embed-iframe"></div>
+                    </div>
+
+                    <div class="spotify-status-bar">
+                        <span id="sp-status-text"><i class="fa-solid fa-circle-info"></i> Pronto para reproduzir • Artista: Seven Hats</span>
+                        <span id="sp-timer">00:00</span>
+                    </div>
+                </div>
+
+                <!-- ==========================================
+                     PLAYER 2: YOUTUBE INTERATIVO (CORRIGIDO ERRO 153)
+                     ========================================== -->
+                <div class="interactive-card" id="youtube-card">
+                    <div class="player-top-bar">
+                        <div class="brand-title">
+                            <i class="fa-brands fa-youtube"></i>
+                            <span>Seven Hats Live / Vídeo</span>
+                            <div class="eq-bars" id="yt-eq">
+                                <span class="eq-bar"></span>
+                                <span class="eq-bar"></span>
+                                <span class="eq-bar"></span>
+                                <span class="eq-bar"></span>
+                            </div>
+                        </div>
+
+                        <div class="js-controls">
+                            <button type="button" class="ctrl-btn yt-accent" id="yt-play-toggle">
+                                <i class="fa-solid fa-play" id="yt-play-icon"></i>
+                                <span id="yt-play-text">Play Vídeo</span>
+                            </button>
+                            <button type="button" class="ctrl-btn" id="yt-restart-btn" title="Reiniciar do começo">
+                                <i class="fa-solid fa-rotate-left"></i>
+                            </button>
+                            <button type="button" class="ctrl-btn" id="yt-mute-toggle" title="Ativar/Desativar Som">
+                                <i class="fa-solid fa-volume-high" id="yt-mute-icon"></i>
+                            </button>
+                            <a href="https://www.youtube.com/@sevenhatsmusic?sub_confirmation=1" target="_blank" rel="noopener noreferrer" class="ctrl-btn yt-accent">
+                                Canal @sevenhatsmusic <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Container do Vídeo com Capa Interativa e ReferrerPolicy explícito -->
+                    <div class="yt-video-Responsive" id="yt-screen-container">
+                        <!-- Capa HD do vídeo th4K7sXkoVI -->
+                        <div class="yt-cover-overlay" id="yt-cover-overlay">
+                            <div class="yt-big-play-btn">
+                                <i class="fa-solid fa-play"></i>
+                            </div>
+                            <span class="yt-cover-badge"><i class="fa-brands fa-youtube" style="color:#FF0000"></i> Clique para reproduzir o Live Set</span>
+                        </div>
+
+                        <!-- IFrame com referrerpolicy explícito para evitar o Erro 153 na Vercel -->
+                        <iframe 
+                            id="yt-api-player"
+                            src="https://www.youtube.com/embed/th4K7sXkoVI?enablejsapi=1&rel=0&modestbranding=1&playsinline=1"
+                            title="Seven Hats YouTube Video"
+                            referrerpolicy="strict-origin-when-cross-origin"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+
+                    <!-- Barra de Progresso Clicável controlada via JS -->
+                    <div class="yt-progress-container" id="yt-progress-container" title="Clique para avançar ou voltar no vídeo">
+                        <div class="yt-progress-bar" id="yt-progress-bar"></div>
+                    </div>
+
+                    <!-- Barra de Status e Atalho Direto -->
+                    <div class="yt-interactive-toolbar">
+                        <span id="yt-status-label" style="font-size: 0.8rem; color: var(--text-gray);">
+                            <i class="fa-brands fa-youtube" style="color: var(--yt-red);"></i> Pronto para assistir • <strong>Seven Hats Official</strong>
+                        </span>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <span class="yt-time-display" id="yt-timer">00:00 / 00:00</span>
+                            <a href="https://www.youtube.com/watch?v=th4K7sXkoVI" target="_blank" rel="noopener noreferrer" class="ctrl-btn" style="font-size: 0.7rem; padding: 5px 12px;">
+                                Assistir no YouTube <i class="fa-solid fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Divisor Booking -->
+            <div class="section-divider">
+                <span class="line"></span>
+                <h2 class="section-title">Contratação</h2>
+                <span class="line"></span>
+            </div>
+
+            <!-- 3. SEÇÃO DE BOOKING -->
+            <section class="booking-box" id="booking">
+                <p class="booking-subtitle">Clubs • Festivais • Eventos • Festas</p>
+                <h3 class="booking-heading">Contato para Booking</h3>
+                <p class="booking-desc">Disponibilidade de datas, press kit completo e propostas comerciais diretamente pelos canais oficiais abaixo:</p>
+
+                <div class="contact-buttons">
+                    <!-- WhatsApp -->
+                    <a href="https://wa.me/5551983485882?text=Ol%C3%A1!%20Gostaria%20de%20verificar%20disponibilidade%20de%20data%20e%20informa%C3%A7%C3%B5es%20de%20booking%20do%20projeto%20Seven%20Hats." 
+                       target="_blank" 
+                       rel="noopener noreferrer" 
+                       class="contact-btn btn-whatsapp">
+                        <i class="fa-brands fa-whatsapp"></i>
+                        <div class="btn-info">
+                            <span class="btn-label">WhatsApp / Fone</span>
+                            <span class="btn-value">(51) 98348-5882</span>
+                        </div>
+                    </a>
+
+                    <!-- E-mail -->
+                    <a href="mailto:kaokingrecords@gmail.com?subject=Booking%20-%20Seven%20Hats" 
+                       class="contact-btn btn-email">
+                        <i class="fa-regular fa-envelope"></i>
+                        <div class="btn-info">
+                            <span class="btn-label">E-mail Oficial</span>
+                            <span class="btn-value">kaokingrecords@gmail.com</span>
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            <footer>
+                <p>© 2026 <span>Seven Hats</span> • Management by <span>Kao King Records</span></p>
+            </footer>
+
+        </div>
+    </main>
+
+    <!-- ==========================================================
+         SCRIPTS INTERATIVOS: SPOTIFY IFRAME API & YOUTUBE JS API
+         ========================================================== -->
+    <script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
+    <script src="https://www.youtube.com/iframe_api" async></script>
+
+    <script>
+        /* =========================================================
+           1. LÓGICA DO PLAYER INTERATIVO DO SPOTIFY
+           ========================================================= */
+        let spotifyController = null;
+        let isSpotifyPlaying = false;
+        let isSpotifyCompact = false;
+
+        window.onSpotifyIframeApiReady = (IFrameAPI) => {
+            const element = document.getElementById('spotify-embed-iframe');
+            const options = {
+                uri: 'spotify:artist:75fo9Q3LFoAazMmikmwBjv',
+                width: '100%',
+                height: 352,
+                theme: 'dark'
+            };
+
+            const callback = (EmbedController) => {
+                spotifyController = EmbedController;
+
+                EmbedController.addListener('playback_update', (e) => {
+                    const { isPaused, position, duration } = e.data;
+                    isSpotifyPlaying = !isPaused;
+                    updateSpotifyUI(isSpotifyPlaying, position, duration);
+                });
+            };
+
+            IFrameAPI.createController(element, options, callback);
+        };
+
+        function formatMs(ms) {
+            if (!ms) return "00:00";
+            const totalSeconds = Math.floor(ms / 1000);
+            const min = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
+            const sec = String(totalSeconds % 60).padStart(2, '0');
+            return `${min}:${sec}`;
+        }
+
+        function formatSec(sec) {
+            if (!sec || isNaN(sec)) return "00:00";
+            const totalSeconds = Math.floor(sec);
+            const m = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
+            const s = String(totalSeconds % 60).padStart(2, '0');
+            return `${m}:${s}`;
+        }
+
+        function updateSpotifyUI(playing, position, duration) {
+            const card = document.getElementById('spotify-card');
+            const eq = document.getElementById('spotify-eq');
+            const icon = document.getElementById('sp-play-icon');
+            const text = document.getElementById('sp-play-text');
+            const status = document.getElementById('sp-status-text');
+            const timer = document.getElementById('sp-timer');
+
+            if (playing) {
+                card.classList.add('playing-spotify');
+                eq.classList.add('active');
+                icon.className = 'fa-solid fa-pause';
+                text.textContent = 'Pausar Spotify';
+                status.innerHTML = '<i class="fa-solid fa-volume-high" style="color:#1DB954"></i> Reproduzindo Seven Hats no Spotify...';
+                if (ytPlayer && typeof ytPlayer.pauseVideo === 'function' && isYtPlaying) {
+                    ytPlayer.pauseVideo();
+                }
+            } else {
+                card.classList.remove('playing-spotify');
+                eq.classList.remove('active');
+                icon.className = 'fa-solid fa-play';
+                text.textContent = 'Tocar Top Tracks';
+                status.innerHTML = '<i class="fa-solid fa-circle-pause"></i> Spotify em pausa';
+            }
+
+            if (position !== undefined) {
+                timer.textContent = `${formatMs(position)} / ${formatMs(duration)}`;
+            }
+        }
+
+        document.getElementById('sp-play-toggle').addEventListener('click', () => {
+            if (spotifyController) {
+                spotifyController.togglePlay();
+            }
+        });
+
+        document.getElementById('sp-size-toggle').addEventListener('click', (e) => {
+            const iframe = document.querySelector('#spotify-wrapper iframe');
+            const btn = e.currentTarget;
+            isSpotifyCompact = !isSpotifyCompact;
+            if (iframe) {
+                iframe.style.height = isSpotifyCompact ? '152px' : '352px';
+            }
+            btn.innerHTML = isSpotifyCompact 
+                ? '<i class="fa-solid fa-expand"></i> Expandir' 
+                : '<i class="fa-solid fa-compress"></i> Compactar';
+        });
+
+
+        /* =========================================================
+           2. LÓGICA DO PLAYER INTERATIVO DO YOUTUBE (ANTI-ERRO 153)
+           ========================================================= */
+        const YOUTUBE_VIDEO_ID = 'th4K7sXkoVI';
+        const YOUTUBE_DIRECT_URL = 'https://www.youtube.com/watch?v=th4K7sXkoVI';
+        let ytPlayer = null;
+        let isYtPlaying = false;
+        let ytTimerInterval = null;
+        let ytHasEmbedError = false;
+
+        // Se o arquivo estiver sendo aberto direto como file:// no computador, avisa ou abre sem dar Erro 153
+        const isLocalFileProtocol = window.location.protocol === 'file:';
+
+        window.onYouTubeIframeAPIReady = () => {
+            ytPlayer = new YT.Player('yt-api-player', {
+                events: {
+                    onReady: onYtReady,
+                    onStateChange: onYtStateChange,
+                    onError: onYtError
+                }
+            });
+        };
+
+        function onYtReady() {
+            updateYtProgress();
+        }
+
+        // Captura automaticamente os erros 101, 150 ou 153 de bloqueio de incorporação
+        function onYtError(event) {
+            ytHasEmbedError = true;
+            const cover = document.getElementById('yt-cover-overlay');
+            const statusLabel = document.getElementById('yt-status-label');
+            
+            // Mantém a capa bonita visível em vez da tela preta de erro 153
+            cover.classList.remove('hidden');
+            statusLabel.innerHTML = '<i class="fa-brands fa-youtube" style="color:#FF0000;"></i> Clique no Play para abrir o vídeo diretamente no YouTube';
+        }
+
+        function triggerYouTubePlay() {
+            const cover = document.getElementById('yt-cover-overlay');
+
+            // Se estiver rodando via file:// no PC ou se o vídeo tiver bloqueio de embed, abre direto para evitar o Erro 153
+            if (isLocalFileProtocol || ytHasEmbedError) {
+                window.open(YOUTUBE_DIRECT_URL, '_blank', 'noopener,noreferrer');
+                return;
+            }
+
+            cover.classList.add('hidden');
+            if (ytPlayer && typeof ytPlayer.playVideo === 'function') {
+                ytPlayer.playVideo();
+            }
+        }
+
+        // Clique na capa HD do vídeo
+        document.getElementById('yt-cover-overlay').addEventListener('click', triggerYouTubePlay);
+
+        function onYtStateChange(event) {
+            const card = document.getElementById('youtube-card');
+            const eq = document.getElementById('yt-eq');
+            const icon = document.getElementById('yt-play-icon');
+            const text = document.getElementById('yt-play-text');
+            const statusLabel = document.getElementById('yt-status-label');
+            const cover = document.getElementById('yt-cover-overlay');
+
+            if (event.data === YT.PlayerState.PLAYING) {
+                isYtPlaying = true;
+                cover.classList.add('hidden');
+                card.classList.add('playing-youtube');
+                eq.classList.add('active');
+                icon.className = 'fa-solid fa-pause';
+                text.textContent = 'Pausar Vídeo';
+                statusLabel.innerHTML = '<i class="fa-solid fa-circle-play" style="color:#FF0000;"></i> Reproduzindo agora • <strong>Seven Hats</strong>';
+
+                if (spotifyController && isSpotifyPlaying) {
+                    spotifyController.togglePlay();
+                }
+
+                clearInterval(ytTimerInterval);
+                ytTimerInterval = setInterval(updateYtProgress, 500);
+            } else if (event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.ENDED) {
+                isYtPlaying = false;
+                card.classList.remove('playing-youtube');
+                eq.classList.remove('active');
+                icon.className = 'fa-solid fa-play';
+                text.textContent = 'Play Vídeo';
+                statusLabel.innerHTML = '<i class="fa-solid fa-circle-pause" style="color:var(--neon-blue);"></i> Vídeo pausado • <strong>Seven Hats</strong>';
+                clearInterval(ytTimerInterval);
+            }
+        }
+
+        function updateYtProgress() {
+            if (!ytPlayer || typeof ytPlayer.getCurrentTime !== 'function') return;
+            const current = ytPlayer.getCurrentTime() || 0;
+            const duration = ytPlayer.getDuration() || 0;
+            const timerEl = document.getElementById('yt-timer');
+            const progressBar = document.getElementById('yt-progress-bar');
+
+            timerEl.textContent = `${formatSec(current)} / ${formatSec(duration)}`;
+            if (duration > 0) {
+                const percent = (current / duration) * 100;
+                progressBar.style.width = `${percent}%`;
+            }
+        }
+
+        // Botão Play / Pause do topo
+        document.getElementById('yt-play-toggle').addEventListener('click', () => {
+            if (isLocalFileProtocol || ytHasEmbedError) {
+                window.open(YOUTUBE_DIRECT_URL, '_blank', 'noopener,noreferrer');
+                return;
+            }
+            if (!ytPlayer || typeof ytPlayer.getPlayerState !== 'function') return;
+            const state = ytPlayer.getPlayerState();
+            if (state === YT.PlayerState.PLAYING) {
+                ytPlayer.pauseVideo();
+            } else {
+                document.getElementById('yt-cover-overlay').classList.add('hidden');
+                ytPlayer.playVideo();
+            }
+        });
+
+        // Botão Reiniciar Vídeo
+        document.getElementById('yt-restart-btn').addEventListener('click', () => {
+            if (!ytPlayer || typeof ytPlayer.seekTo !== 'function') return;
+            document.getElementById('yt-cover-overlay').classList.add('hidden');
+            ytPlayer.seekTo(0, true);
+            ytPlayer.playVideo();
+        });
+
+        // Botão Mute / Unmute
+        document.getElementById('yt-mute-toggle').addEventListener('click', () => {
+            if (!ytPlayer || typeof ytPlayer.isMuted !== 'function') return;
+            const muteIcon = document.getElementById('yt-mute-icon');
+            if (ytPlayer.isMuted()) {
+                ytPlayer.unMute();
+                muteIcon.className = 'fa-solid fa-volume-high';
+            } else {
+                ytPlayer.mute();
+                muteIcon.className = 'fa-solid fa-volume-xmark';
+            }
+        });
+
+        // Clique na barra de progresso
+        document.getElementById('yt-progress-container').addEventListener('click', (e) => {
+            if (!ytPlayer || typeof ytPlayer.getDuration !== 'function') return;
+            const container = e.currentTarget;
+            const rect = container.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const width = rect.width;
+            const duration = ytPlayer.getDuration();
+            if (duration > 0) {
+                const newTime = (clickX / width) * duration;
+                ytPlayer.seekTo(newTime, true);
+                updateYtProgress();
+            }
+        });
+    </script>
+
+</body>
+</html>
